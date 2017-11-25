@@ -14,7 +14,7 @@ import time
 # Path to folder with images
 folder = 'file/'
 # Time delay between frames in seconds
-delay = 100
+delay = 3
 
 
 KEY = 'bb72da8595ab4d56a05a1d666f7933f6'  # Replace with a valid Subscription Key here.
@@ -41,6 +41,9 @@ params = {
 #################################
 # Webcam code
 #################################
+
+# Record dominant emotion
+emotions = ['not happy'] * 20
 
 cam = cv2.VideoCapture(0)
 
@@ -72,33 +75,27 @@ while(1):
 	    print(e)
 
 
+	if response:
+
+		json_response = response.json()
+		mood = json_response[0]["faceAttributes"]["emotion"]
+
+
+		if float(mood["happiness"]) > 0.5:
+			emotions.append("happy")
+		else:
+			emotions.append("not happy")
+
+
+		print(emotions[-10:-1])
+
+		if "happy" not in emotions[-10:-1]:
+			print("Tell a good joke")
+
+
 	k = cv2.waitKey(1)
 	count = count + 1
 	time.sleep(delay)
-
-
-
-# pathToFileInDisk = r'D:\tmp\3.jpg'
-# with open( pathToFileInDisk, 'rb' ) as f:
-#     data = f.read()
-    
-# # Computer Vision parameters
-# params = { 'visualFeatures' : 'Color,Categories'} 
-
-# headers = dict()
-# headers['Ocp-Apim-Subscription-Key'] = _key
-# headers['Content-Type'] = 'application/octet-stream'
-
-# json = None
-
-# result = processRequest( json, data, headers, params )
-
-
-
-
-
-# cv2.imshow("Test Picture", frame) # displays captured image
-
 
 # When everything done, release the capture
 cam.release()
