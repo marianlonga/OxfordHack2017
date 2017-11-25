@@ -8,13 +8,6 @@ BASE_URL = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/'  # Rep
 CF.BaseUrl.set(BASE_URL)
 
 img_url = 'https://raw.githubusercontent.com/Microsoft/Cognitive-Face-Windows/master/Data/detection1.jpg'
-<<<<<<< HEAD
-
-=======
-result = CF.face.detect(img_url)
-print (result)
->>>>>>> fa71533bc3e38b2956293b6f8c524e1468268845
-
 
 uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
 
@@ -23,7 +16,6 @@ headers = {
     'Content-Type': 'application/json',
     'Ocp-Apim-Subscription-Key': KEY,
 }
-
 # Request parameters.
 params = {
     'returnFaceId': 'true',
@@ -32,11 +24,9 @@ params = {
 }
 
 # Body. The URL of a JPEG image to analyze.
-<<<<<<< HEAD
+
 body = {'url': img_url}
-=======
-body = {'url': 'https://upload.wikimedia.org/wikipedia/commons/c/c3/RH_Louise_Lillian_Gish.jpg'}
->>>>>>> fa71533bc3e38b2956293b6f8c524e1468268845
+
 
 try:
     # Execute the REST API call and get the response.
@@ -49,3 +39,5 @@ try:
 except Exception as e:
     print('Error:')
     print(e)
+
+
