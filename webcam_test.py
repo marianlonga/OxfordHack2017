@@ -12,7 +12,7 @@ import time
 ##################################
 
 # Path to folder with images
-folder = 'file'
+folder = 'file/'
 # Time delay between frames in seconds
 delay = 100
 
@@ -49,7 +49,7 @@ while(1):
 	ret, frame = cam.read()
 	frame_num = "%08d" % (count,)
 
-	pathToFile = folder + '/' + frame_num + '.jpg'
+	pathToFile = folder + frame_num + '.jpg'
 	cv2.imwrite(pathToFile, frame)
 
 
