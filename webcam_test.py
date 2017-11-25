@@ -14,7 +14,7 @@ import time
 # Path to folder with images
 folder = 'file'
 # Time delay between frames in seconds
-delay = 2.5
+delay = 100
 
 
 KEY = 'bb72da8595ab4d56a05a1d666f7933f6'  # Replace with a valid Subscription Key here.
@@ -49,7 +49,7 @@ while(1):
 	ret, frame = cam.read()
 	frame_num = "%08d" % (count,)
 
-	pathToFile = folder + frame_num + '.jpg'
+	pathToFile = folder + '/' + frame_num + '.jpg'
 	cv2.imwrite(pathToFile, frame)
 
 
