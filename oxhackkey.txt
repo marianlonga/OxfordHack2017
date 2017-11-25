@@ -1,0 +1,5 @@
+Endpoint: https://westcentralus.api.cognitive.microsoft.com/vision/v1.0
+
+Key 1: 07cb87b82c014c37821b755437a48ee4
+
+Key 2: c35382be6c4c48c9b037f035d0e2d23b

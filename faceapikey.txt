@@ -1,0 +1,8 @@
+Detect, identify, analyse, organise and tag faces in photos
+
+30,000 transactions, 20 per minute.
+Endpoint: https://westcentralus.api.cognitive.microsoft.com/face/v1.0
+
+Key 1: 10faf3c913b54ebf84ac1b61fbd11625
+
+Key 2: 1c6e76b032854584ac9a9b533dde2637
