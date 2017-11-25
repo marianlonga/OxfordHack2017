@@ -1,5 +1,5 @@
 import numpy
-import cv2 
+import cv2
 
 import cognitive_face as CF
 import http.client, urllib.request, urllib.parse, urllib.error, base64, requests, json
@@ -8,6 +8,7 @@ import time
 
 import json
 import requests
+import text_to_speech
 
 
 ##################################
@@ -76,8 +77,7 @@ while(1):
 	    print('Error:')
 	    print(e)
 
-
-	if response != []:
+	if response.text != '[]':
 
 		json_response = response.json()
 		mood = json_response[0]["faceAttributes"]["emotion"]
@@ -97,6 +97,8 @@ while(1):
 			parsed = json.loads(content.text)
 			joke = parsed["joke"]
 			print(joke)
+			text_to_speech.speak("Here's a joke for you", 10000)
+			text_to_speech.speak(joke, 8000)
 
 	k = cv2.waitKey(1)
 	count = count + 1

@@ -12,75 +12,81 @@
 ###
 import http.client, urllib.parse, json
 from xml.etree import ElementTree
-
-text = "Hello World"
-speed = 8000
-
-
-# Note: The way to get api key:
-# Free: https://www.microsoft.com/cognitive-services/en-us/subscriptions?productId=/products/Bing.Speech.Preview
-# Paid: https://portal.azure.com/#create/Microsoft.CognitiveServices/apitype/Bing.Speech/pricingtier/S0
-apiKey = "284f0b6f9afb4849982500973629b7d2"
-
-params = ""
-headers = {"Ocp-Apim-Subscription-Key": apiKey}
-
-# AccessTokenUri = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-AccessTokenHost = "api.cognitive.microsoft.com"
-path = "/sts/v1.0/issueToken"
-
-# Connect to server to get the Access Token
-print("Connect to server to get the Access Token")
-conn = http.client.HTTPSConnection(AccessTokenHost)
-conn.request("POST", path, params, headers)
-response = conn.getresponse()
-print(response.status, response.reason)
-
-data = response.read()
-conn.close()
-
-accesstoken = data.decode("UTF-8")
-print("Access Token: " + accesstoken)
-
-body = ElementTree.Element('speak', version='1.0')
-body.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-us')
-voice = ElementTree.SubElement(body, 'voice')
-voice.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-US')
-voice.set('{http://www.w3.org/XML/1998/namespace}gender', 'Female')
-voice.set('name', 'Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)')
-voice.text = text
-
-headers = {"Content-type": "application/ssml+xml",
-           "X-Microsoft-OutputFormat": "riff-16khz-16bit-mono-pcm",
-           "Authorization": "Bearer " + accesstoken,
-           "X-Search-AppId": "07D3234E49CE426DAA29772419F436CA",
-           "X-Search-ClientID": "1ECFAE91408841A480F00935DC390960",
-           "User-Agent": "TTSForPython"}
-
-# Connect to server to synthesize the wave
-print("\nConnect to server to synthesize the wave")
-conn = http.client.HTTPSConnection("speech.platform.bing.com")
-conn.request("POST", "/synthesize", ElementTree.tostring(body), headers)
-response = conn.getresponse()
-print(response.status, response.reason)
-
-data = response.read()
-conn.close()
-print("The synthesized wave length: %d" % (len(data)))
-
-print(data)
-
-
-
-
-
 import time, sys
 from pygame import mixer
 
-# pygame.init()
-mixer.init(speed)
+def speak(text, speed):
 
-sound = mixer.Sound(data)
-sound.play()
+    #text = "Hello World"
+    #speed = 8000
 
-time.sleep(5)
+
+    # Note: The way to get api key:
+    # Free: https://www.microsoft.com/cognitive-services/en-us/subscriptions?productId=/products/Bing.Speech.Preview
+    # Paid: https://portal.azure.com/#create/Microsoft.CognitiveServices/apitype/Bing.Speech/pricingtier/S0
+    apiKey = "284f0b6f9afb4849982500973629b7d2"
+
+    params = ""
+    headers = {"Ocp-Apim-Subscription-Key": apiKey}
+
+    # AccessTokenUri = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+    AccessTokenHost = "api.cognitive.microsoft.com"
+    path = "/sts/v1.0/issueToken"
+
+    # Connect to server to get the Access Token
+    print("Connect to server to get the Access Token")
+    conn = http.client.HTTPSConnection(AccessTokenHost)
+    conn.request("POST", path, params, headers)
+    response = conn.getresponse()
+    print(response.status, response.reason)
+
+    data = response.read()
+    conn.close()
+
+    accesstoken = data.decode("UTF-8")
+    print("Access Token: " + accesstoken)
+
+    body = ElementTree.Element('speak', version='1.0')
+    body.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-us')
+    voice = ElementTree.SubElement(body, 'voice')
+    voice.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-US')
+    voice.set('{http://www.w3.org/XML/1998/namespace}gender', 'Female')
+    voice.set('name', 'Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)')
+    voice.text = text
+
+    headers = {"Content-type": "application/ssml+xml",
+               "X-Microsoft-OutputFormat": "riff-16khz-16bit-mono-pcm",
+               "Authorization": "Bearer " + accesstoken,
+               "X-Search-AppId": "07D3234E49CE426DAA29772419F436CA",
+               "X-Search-ClientID": "1ECFAE91408841A480F00935DC390960",
+               "User-Agent": "TTSForPython"}
+
+    # Connect to server to synthesize the wave
+    print("\nConnect to server to synthesize the wave")
+    conn = http.client.HTTPSConnection("speech.platform.bing.com")
+    conn.request("POST", "/synthesize", ElementTree.tostring(body), headers)
+    response = conn.getresponse()
+    print(response.status, response.reason)
+
+    data = response.read()
+    conn.close()
+    print("The synthesized wave length: %d" % (len(data)))
+
+    print(data)
+
+
+
+
+
+
+
+    # pygame.init()
+    mixer.init(speed)
+
+    sound = mixer.Sound(data)
+    sound.play()
+
+    time.sleep(5)
+
+
+#speak("Hello", 10000)
