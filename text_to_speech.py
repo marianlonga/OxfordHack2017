@@ -44,7 +44,7 @@ def speak(text, speed):
     conn.close()
 
     accesstoken = data.decode("UTF-8")
-    print("Access Token: " + accesstoken)
+    #print("Access Token: " + accesstoken)
 
     body = ElementTree.Element('speak', version='1.0')
     body.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-us')
@@ -72,7 +72,7 @@ def speak(text, speed):
     conn.close()
     print("The synthesized wave length: %d" % (len(data)))
 
-    print(data)
+    #print(data)
 
 
 

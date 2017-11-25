@@ -97,8 +97,7 @@ while(1):
 			parsed = json.loads(content.text)
 			joke = parsed["joke"]
 			print(joke)
-			text_to_speech.speak("Here's a joke for you", 10000)
-			text_to_speech.speak(joke, 8000)
+			text_to_speech.speak("You look sad, here's a joke for you. " + joke, 8000)
 
 	k = cv2.waitKey(1)
 	count = count + 1
