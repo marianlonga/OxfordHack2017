@@ -153,6 +153,9 @@ while(1):
 				cropped_frame = frame[y1:y2, x1:x2]
 				cropped_frame_image = Image.fromarray(cropped_frame)
 				cropped_frame_image.save('crop.png')
+				cropped_frame = cv2.imread('crop.png')
+				cropped_frame = cv2.cvtColor(cropped_frame,cv2.COLOR_BGR2RGB)
+				cv2.imwrite('crop.png',cropped_frame)
 
 				#tweet.tweet("sad", cropped_frame)
 				#cv2.imshow("cropped", cropped_frame)
