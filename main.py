@@ -14,6 +14,7 @@ import tweet
 import openurl
 from PIL import Image
 import json
+import sys
 
 
 ##################################
@@ -26,13 +27,14 @@ folder = 'file/'
 delay = 5.0
 
 
-KEY = 'bb72da8595ab4d56a05a1d666f7933f6'  # Replace with a valid Subscription Key here.
+KEY = '1bae8b75b79a4a29bc8a30624aac17bc'  # Replace with a valid Subscription Key here.
 CF.Key.set(KEY)
 
-BASE_URL = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0/'  # Replace with your regional Base URL
+BASE_URL = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0'  # Replace with your regional Base URL
 CF.BaseUrl.set(BASE_URL)
 
-uri_base = 'https://westcentralus.api.cognitive.microsoft.com'
+#uri_base = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
+
 
 # Request headers.
 headers = {
@@ -40,11 +42,12 @@ headers = {
     'Ocp-Apim-Subscription-Key': KEY,
 }
 # Request parameters.
-params = {
-    'returnFaceId': 'true',
-    'returnFaceLandmarks': 'false',
-    'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
-}
+params = "{}"
+#params = {
+#    'returnFaceId': 'true',
+#    'returnFaceLandmarks': 'false',
+#    'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
+#}
 
 
 #################################
@@ -76,18 +79,20 @@ while(1):
 
 
 	try:
-	    # Execute the REST API call and get the response.
-	    response = requests.request('POST', uri_base + '/face/v1.0/detect', json=None, data=data, headers=headers, params=params)
-
-	    #print ('Response:')
-	    parsed = json.loads(response.text)
-	    #print (json.dumps(parsed, sort_keys=True, indent=2))
+		# Execute the REST API call and get the response.
+		response = requests.request('POST', "https://api.projectoxford.ai/emotion/v1.0/recognize", json=None, data=data, headers=headers, params=params)
+		#print(response)
+		#print ('Response:')
+		parsed = json.loads(response.text)
+		#print(parsed)
+		#print (json.dumps(parsed, sort_keys=True, indent=2))
+		#sys.exit()
 
 	except Exception as e:
-	    print('Error:')
-	    print(e)
+		print('Error:')
+		print(e)
 
-	if str(parsed) != "[]":
+	if parsed != None and str(parsed) != "[]":
 
 		# Check if last method to increase happiness was successful in making a person happy and if so,
 		# increase score for corresponding method in JSON file
@@ -99,11 +104,18 @@ while(1):
 				json.dump(d, outfile)
 
 
-		# get current emotion
-		json_response = response.json()
-		# print(json_response)
-		mood = json_response[0]["faceAttributes"]["emotion"]
-		if float(mood["happiness"]) > 0.3:
+		# # get current emotion
+		# json_response = response.json()
+		# # print(json_response)
+		# mood = json_response[0]["faceAttributes"]["emotion"]
+		# if float(mood["happiness"]) > 0.3:
+		# 	emotions.append("happy")
+		# else:
+		# 	emotions.append("sad")
+
+		happiness_level = float(parsed[0]['scores']['happiness'])
+		print("Happiness: " + str(happiness_level))
+		if happiness_level > 0.3:
 			emotions.append("happy")
 		else:
 			emotions.append("sad")
@@ -127,7 +139,7 @@ while(1):
 				joke = jokes.get_joke()
 				#print(joke)
 
-				text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
+				#text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
 
 				print("We have told you a joke!")
 
@@ -140,10 +152,10 @@ while(1):
 				#print(height)
 				width = frame.shape[1]
 				#print(width)
-				x1 = json_response[0]["faceRectangle"]["left"] - 70
-				x2 = x1 + 70 + json_response[0]["faceRectangle"]["width"] + 70
-				y1 = json_response[0]["faceRectangle"]["top"] - 150
-				y2 = y1 + 150 + json_response[0]["faceRectangle"]["height"] + 70
+				x1 = parsed[0]["faceRectangle"]["left"] - 70
+				x2 = x1 + 70 + parsed[0]["faceRectangle"]["width"] + 70
+				y1 = parsed[0]["faceRectangle"]["top"] - 150
+				y2 = y1 + 150 + parsed[0]["faceRectangle"]["height"] + 70
 				x1 = x1 if x1 > 0 else 0
 				y1 = y1 if y1 > 0 else 0
 				x2 = x2 if x2 < width else width - 1
@@ -161,7 +173,7 @@ while(1):
 				#cv2.imshow("cropped", cropped_frame)
 				#cv2.waitKey(0)
 
-				tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
+				#tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
 
 				print("We have tweeted to get you help!")
 
@@ -170,7 +182,7 @@ while(1):
 			if method_to_make_you_happier_count == 2:
 				## PLAY CAT VIDEO
 
-				openurl.play_cat_video()
+				#openurl.play_cat_video()
 
 				print("We have played a funny cat video!")
 
