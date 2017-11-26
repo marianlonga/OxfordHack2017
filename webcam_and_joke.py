@@ -9,6 +9,7 @@ import time
 import json
 import requests
 import text_to_speech
+import jokes
 
 
 ##################################
@@ -93,9 +94,10 @@ while(1):
 
 		if "happy" not in emotions[-4:-1]:
 			print("Looks like you need a joke. Here's one:")
-			content = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
-			parsed = json.loads(content.text)
-			joke = parsed["joke"]
+			#content = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
+			#parsed = json.loads(content.text)
+			#joke = parsed["joke"]
+			joke = jokes.get_joke()
 			print(joke)
 			text_to_speech.speak("You look sad, here's a joke for you. " + joke, 8000)
 
