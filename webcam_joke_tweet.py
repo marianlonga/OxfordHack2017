@@ -11,6 +11,7 @@ import requests
 import text_to_speech
 import jokes
 import tweet
+import openurl
 from PIL import Image
 
 
@@ -131,6 +132,8 @@ while(1):
             #cv2.waitKey(0)
 
 			tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
+
+			openurl.play_cat_video()
 
 	k = cv2.waitKey(1)
 	count = count + 1
