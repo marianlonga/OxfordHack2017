@@ -34,11 +34,11 @@ def speak(text, speed):
     path = "/sts/v1.0/issueToken"
 
     # Connect to server to get the Access Token
-    print("Connect to server to get the Access Token")
+    #print("Connect to server to get the Access Token")
     conn = http.client.HTTPSConnection(AccessTokenHost)
     conn.request("POST", path, params, headers)
     response = conn.getresponse()
-    print(response.status, response.reason)
+    #print(response.status, response.reason)
 
     data = response.read()
     conn.close()
@@ -62,15 +62,15 @@ def speak(text, speed):
                "User-Agent": "TTSForPython"}
 
     # Connect to server to synthesize the wave
-    print("\nConnect to server to synthesize the wave")
+    #print("\nConnect to server to synthesize the wave")
     conn = http.client.HTTPSConnection("speech.platform.bing.com")
     conn.request("POST", "/synthesize", ElementTree.tostring(body), headers)
     response = conn.getresponse()
-    print(response.status, response.reason)
+    #print(response.status, response.reason)
 
     data = response.read()
     conn.close()
-    print("The synthesized wave length: %d" % (len(data)))
+    #print("The synthesized wave length: %d" % (len(data)))
 
     #print(data)
 

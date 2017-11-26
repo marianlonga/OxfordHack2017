@@ -121,7 +121,7 @@ while(1):
 			y1 = y1 if y1 > 0 else 0
 			x2 = x2 if x2 < width else width - 1
 			y2 = y2 if y2 < height else height - 1
-			print(x1, x2, y1, y2)
+			#print(x1, x2, y1, y2)
 
 			cropped_frame = frame[y1:y2, x1:x2]
 			cropped_frame_image = Image.fromarray(cropped_frame)

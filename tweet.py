@@ -10,4 +10,4 @@ def tweet(text, image_name):
     file = open(image_name, 'rb')
     data = file.read()
     r = api.request('statuses/update_with_media', {'status': text}, {'media[]': data})
-    print(r.status_code)
+    #print(r.status_code)

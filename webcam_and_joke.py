@@ -70,9 +70,9 @@ while(1):
 	    # Execute the REST API call and get the response.
 	    response = requests.request('POST', uri_base + '/face/v1.0/detect', json=None, data=data, headers=headers, params=params)
 
-	    print ('Response:')
+	    #print ('Response:')
 	    parsed = json.loads(response.text)
-	    print (json.dumps(parsed, sort_keys=True, indent=2))
+	    #print (json.dumps(parsed, sort_keys=True, indent=2))
 
 	except Exception as e:
 	    print('Error:')
@@ -93,12 +93,12 @@ while(1):
 		print(emotions[-10:-1])
 
 		if "happy" not in emotions[-4:-1]:
-			print("Looks like you need a joke. Here's one:")
+			#print("Looks like you need a joke. Here's one:")
 			#content = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
 			#parsed = json.loads(content.text)
 			#joke = parsed["joke"]
 			joke = jokes.get_joke()
-			print(joke)
+			#print(joke)
 			text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
 
 		height = frame.shape[0]
