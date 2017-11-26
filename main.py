@@ -167,6 +167,7 @@ while(1):
 				cropped_frame_image.save('crop.png')
 				cropped_frame = cv2.imread('crop.png')
 				cropped_frame = cv2.cvtColor(cropped_frame,cv2.COLOR_BGR2RGB)
+				cv2.putText(cropped_frame,("Happiness Level: " + str("%.1f"%(happiness_level*100))+"%"),(0,100),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),thickness=2)
 				cv2.imwrite('crop.png',cropped_frame)
 
 				#tweet.tweet("sad", cropped_frame)
