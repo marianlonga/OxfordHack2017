@@ -13,6 +13,7 @@ import jokes
 import tweet
 import openurl
 from PIL import Image
+import json
 
 
 ##################################
@@ -57,6 +58,8 @@ cam = cv2.VideoCapture(0)
 
 method_to_make_you_happier_count = 0
 
+last_method_to_increase_happiness = "joke"
+
 count = 0
 while(1):
 	ret, frame = cam.read()
@@ -86,19 +89,30 @@ while(1):
 
 	if str(parsed) != "[]":
 
+		# Check if last method to increase happiness was successful in making a person happy and if so,
+		# increase score for corresponding method in JSON file
+		if (emotions[-2] == "sad" and emotions[-1] == "happy"):
+			with open('scores.json') as json_data:
+				d = json.load(json_data)
+				d[last_method_to_increase_happiness] = d[last_method_to_increase_happiness] + 1
+			with open('scores.json', 'w') as outfile:
+				json.dump(d, outfile)
+
+
+		# get current emotion
 		json_response = response.json()
-		print(json_response)
+		# print(json_response)
 		mood = json_response[0]["faceAttributes"]["emotion"]
-
-
 		if float(mood["happiness"]) > 0.3:
 			emotions.append("happy")
 		else:
-			emotions.append("not happy")
+			emotions.append("sad")
+
 
 
 		#print(emotions[-10:-1])
 
+		# if you've been sad for the past 4 time stamps:
 		if "happy" not in emotions[-4:-1]:
 
 			#print(method_to_make_you_happier_count)
@@ -113,9 +127,11 @@ while(1):
 				joke = jokes.get_joke()
 				#print(joke)
 
-				#text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
+				text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
 
 				print("We have told you a joke!")
+
+				last_method_to_increase_happiness = "joke"
 
 			if method_to_make_you_happier_count == 1:
 				## CROP PICTURE TO YOUR FACE ONLY AND TWEET IT
@@ -142,22 +158,33 @@ while(1):
 				#cv2.imshow("cropped", cropped_frame)
 				#cv2.waitKey(0)
 
-				#tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
+				tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
 
 				print("We have tweeted to get you help!")
+
+				last_method_to_increase_happiness = "tweet"
 
 			if method_to_make_you_happier_count == 2:
 				## PLAY CAT VIDEO
 
-				#openurl.play_cat_video()
+				openurl.play_cat_video()
 
 				print("We have played a funny cat video!")
+
+				last_method_to_increase_happiness = "video"
 
 			method_to_make_you_happier_count = (method_to_make_you_happier_count + 1) % 3
 
 		else:
 
 			print("You're happy!")
+
+
+
+
+
+
+
 
 #	k = cv2.waitKey(1)
 #	count = count + 1
