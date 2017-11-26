@@ -10,6 +10,8 @@ import json
 import requests
 import text_to_speech
 import jokes
+import tweet
+from PIL import Image
 
 
 ##################################
@@ -93,6 +95,9 @@ while(1):
 		print(emotions[-10:-1])
 
 		if "happy" not in emotions[-4:-1]:
+
+            ## TELL A JOKE
+
 			print("Looks like you need a joke. Here's one:")
 			#content = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
 			#parsed = json.loads(content.text)
@@ -101,23 +106,31 @@ while(1):
 			print(joke)
 			text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
 
-		height = frame.shape[0]
-		print(height)
-		width = frame.shape[1]
-		print(width)
-		x1 = json_response[0]["faceRectangle"]["left"] - 70
-		x2 = x1 + 70 + json_response[0]["faceRectangle"]["width"] + 70
-		y1 = json_response[0]["faceRectangle"]["top"] - 150
-		y2 = y1 + 150 + json_response[0]["faceRectangle"]["height"] + 70
-		x1 = x1 if x1 > 0 else 0
-		y1 = y1 if y1 > 0 else 0
-		x2 = x2 if x2 < width else width - 1
-		y2 = y2 if y2 < height else height - 1
-		print(x1, x2, y1, y2)
+            ## CROP PICTURE TO YOUR FACE ONLY
 
-		cropped_frame = frame[y1:y2, x1:x2]
-		#cv2.imshow("cropped", cropped_frame)
-		#cv2.waitKey(0)
+			height = frame.shape[0]
+			print(height)
+			width = frame.shape[1]
+			print(width)
+			x1 = json_response[0]["faceRectangle"]["left"] - 70
+			x2 = x1 + 70 + json_response[0]["faceRectangle"]["width"] + 70
+			y1 = json_response[0]["faceRectangle"]["top"] - 150
+			y2 = y1 + 150 + json_response[0]["faceRectangle"]["height"] + 70
+			x1 = x1 if x1 > 0 else 0
+			y1 = y1 if y1 > 0 else 0
+			x2 = x2 if x2 < width else width - 1
+			y2 = y2 if y2 < height else height - 1
+			print(x1, x2, y1, y2)
+
+			cropped_frame = frame[y1:y2, x1:x2]
+			cropped_frame_image = Image.fromarray(cropped_frame)
+			cropped_frame_image.save('crop.png')
+
+            #tweet.tweet("sad", cropped_frame)
+            #cv2.imshow("cropped", cropped_frame)
+            #cv2.waitKey(0)
+
+			tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
 
 	k = cv2.waitKey(1)
 	count = count + 1
