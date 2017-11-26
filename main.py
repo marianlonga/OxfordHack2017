@@ -50,9 +50,9 @@ params = "{}"
 #}
 
 
-#################################
-# Webcam code
-#################################
+# clean
+
+
 
 emotions = ['not happy'] * 20
 
@@ -62,6 +62,8 @@ cam = cv2.VideoCapture(0)
 method_to_make_you_happier_count = 0
 
 last_method_to_increase_happiness = "joke"
+latest_joke_number = 0
+just_told_a_joke = False
 
 count = 0
 while(1):
@@ -120,9 +122,19 @@ while(1):
 		else:
 			emotions.append("sad")
 
+		# if just told a joke, record its corresponding happiness value to JSON file
+		if(just_told_a_joke):
+			with open('jokes_scores.json') as json_data:
+				d = json.load(json_data)
+				d["joke" + str(latest_joke_number)] = d["joke" + str(latest_joke_number)] + happiness_level
+			with open('jokes_scores.json', 'w') as outfile:
+				json.dump(d, outfile)
+
 
 
 		#print(emotions[-10:-1])
+
+		just_told_a_joke = False
 
 		# if you've been sad for the past 4 time stamps:
 		if "happy" not in emotions[-4:-1]:
@@ -136,14 +148,17 @@ while(1):
 				#content = requests.get("https://icanhazdadjoke.com/", headers={"Accept": "application/json"})
 				#parsed = json.loads(content.text)
 				#joke = parsed["joke"]
-				joke = jokes.get_joke()
+				joke, joke_number = jokes.get_joke()
+				latest_joke_number = joke_number
+				#print(joke, joke_number)
 				#print(joke)
 
-				#text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
+				text_to_speech.speak("You look unhappy, here's a joke for you. " + joke, 8000)
 
 				print("We have told you a joke!")
 
 				last_method_to_increase_happiness = "joke"
+				just_told_a_joke = True
 
 			if method_to_make_you_happier_count == 1:
 				## CROP PICTURE TO YOUR FACE ONLY AND TWEET IT
@@ -174,7 +189,7 @@ while(1):
 				#cv2.imshow("cropped", cropped_frame)
 				#cv2.waitKey(0)
 
-				#tweet.tweet("I'm feeling " + str((json_response[0]["faceAttributes"]["emotion"]["sadness"])*100) + "% sad :(", 'crop.png')
+				tweet.tweet("I'm feeling " + str(float(parsed[0]['scores']['happiness'])*100) + "% happy  #OxfordHack", 'crop.png')
 
 				print("We have tweeted to get you help!")
 
@@ -183,7 +198,7 @@ while(1):
 			if method_to_make_you_happier_count == 2:
 				## PLAY CAT VIDEO
 
-				#openurl.play_cat_video()
+				openurl.play_cat_video()
 
 				print("We have played a funny cat video!")
 

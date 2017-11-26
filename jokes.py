@@ -8,6 +8,7 @@ def get_joke():
         jokes = f.readlines()
     jokes = [joke.strip() for joke in jokes]
 
-    random_joke = jokes[randint(0, len(jokes)-1)]
+    random_index = randint(0, len(jokes)-1)
+    random_joke = jokes[random_index]
 
-    return random_joke
+    return random_joke, random_index
